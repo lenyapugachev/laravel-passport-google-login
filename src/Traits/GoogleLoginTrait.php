@@ -60,9 +60,14 @@ trait GoogleLoginTrait {
 				$email_column      = config( 'google-passport.registration.email', 'email' );
 				$password_column   = config( 'google-passport.registration.password', 'password' );
 
-				$user = $userModel::where( $google_id_column, $googleUser['id'] )->orWhere( function ( $query ) use ( $email_column, $google_id_column, $googleUser ) {
-					$query->where( $email_column, $googleUser['email'] );
-				} )->first();
+				$user = $userModel::where( $google_id_column, $googleUser['id'] )->first();
+
+				if (!$user) {
+				    $user = $userModel::where($email_column, $googleUser['email'])->first();
+
+				    $user->{$google_id_column} = $googleUser['id'];
+				    $user->save();
+				}
 
 				if ( ! $user ) {
 					$user                      = new $userModel();
