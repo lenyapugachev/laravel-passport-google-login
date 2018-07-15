@@ -4,7 +4,9 @@ namespace Versoo\PassportGoogleLogin\Traits;
 
 use Google_Client;
 use Google_Service_Oauth2;
+
 use Illuminate\Http\Request;
+use League\OAuth2\Server\Exception\OAuthServerException;
 
 trait GoogleLoginTrait {
 	/**
