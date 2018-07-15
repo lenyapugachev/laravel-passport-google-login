@@ -102,8 +102,8 @@ trait GoogleLoginTrait {
 				return $user;
 			}
 		} catch ( \Exception $e ) {
-			die( $e->getMessage() );
-//			throw OAuthServerException::accessDenied( $e->getMessage() );
+// 			die( $e->getMessage() );
+			throw OAuthServerException::accessDenied( $e->getMessage() );
 		}
 
 		return null;
