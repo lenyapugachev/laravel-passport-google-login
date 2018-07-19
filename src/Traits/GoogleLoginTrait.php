@@ -45,39 +45,32 @@ trait GoogleLoginTrait {
 				$email_column      = config( 'google-passport.registration.email', 'email' );
 				$password_column   = config( 'google-passport.registration.password', 'password' );
 
-				$user = $userModel::where( $google_id_column, $googleUser->{'id'} )->first();
+				$user = $userModel::where($google_id_column, $googleUser->id)->first();
 
 				if (!$user) {
-				    $user = $userModel::where($email_column, $googleUser->{'email'})->first();
+				    $user = $userModel::where($email_column, $googleUser->email)->first();
 
-				    $user->{$google_id_column} = $googleUser->{'id'};
+				    $user->{$google_id_column} = $googleUser->id;
 				    $user->save();
 				}
 
-				if ( ! $user ) {
-					$user                      = new $userModel();
-					$user->{$google_id_column} = $googleUser->{'id'};
+				if (!$user) {
+					$user = new $userModel();
+					$user->{$google_id_column} = $googleUser->id;
 
-					if ( $first_name_column ) {
-						$user->{$first_name_column} = $googleUser->{'givenName'};
+					if ($first_name_column) {
+						$user->{$first_name_column} = $googleUser->givenName;
 					}
-					if ( $last_name_column ) {
-						$user->{$last_name_column} = $googleUser->{'familyName'};
+					if ($last_name_column) {
+						$user->{$last_name_column} = $googleUser->familyName;
 					}
-					if ( $name_column ) {
-						$user->{$name_column} = $googleUser->{'name'};
+					if ($name_column) {
+						$user->{$name_column} = $googleUser->name;
 					}
 
-					$user->{$email_column}    = $googleUser->{'email'};
+					$user->{$email_column} = $googleUser->email;
 					$user->{$password_column} = bcrypt( uniqid( 'plus_', true ) ); // Random password.
 					$user->save();
-
-					/**
-					 * Attach a role to the user.
-					 */
-					if ( ! is_null( config( 'google-passport.registration.attach_role' ) ) ) {
-						$user->attachRole( config( 'google-passport.registration.attach_role' ) );
-					}
 				}
 
 				return $user;
