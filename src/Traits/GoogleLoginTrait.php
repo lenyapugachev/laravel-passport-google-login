@@ -49,9 +49,11 @@ trait GoogleLoginTrait {
 
 				if (!$user) {
 				    $user = $userModel::where($email_column, $googleUser->email)->first();
-
-				    $user->{$google_id_column} = $googleUser->id;
-				    $user->save();
+					
+				    if($user) {
+					$user->{$google_id_column} = $googleUser->id;
+				    	$user->save();
+				    }
 				}
 
 				if (!$user) {
