@@ -1,7 +1,6 @@
 <?php
 
-namespace Versoo\PassportGoogleLogin\Providers;
-
+namespace LenyaPugachev\PassportGoogleLogin\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Bridge\RefreshTokenRepository;
@@ -9,7 +8,7 @@ use Laravel\Passport\Bridge\UserRepository;
 use Laravel\Passport\Passport;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Grant\PasswordGrant;
-use Versoo\PassportGoogleLogin\GoogleLoginRequestGrant;
+use LenyaPugachev\PassportGoogleLogin\GoogleLoginRequestGrant;
 
 class GoggleLoginServiceProvider extends ServiceProvider {
 	public function register() {
