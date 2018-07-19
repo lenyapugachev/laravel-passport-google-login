@@ -45,7 +45,7 @@ trait GoogleLoginTrait {
 				$email_column      = config( 'google-passport.registration.email', 'email' );
 				$password_column   = config( 'google-passport.registration.password', 'password' );
 
-				$user = $userModel::where( $google_id_column, $googleUserr->{'id'} )->first();
+				$user = $userModel::where( $google_id_column, $googleUser->{'id'} )->first();
 
 				if (!$user) {
 				    $user = $userModel::where($email_column, $googleUser->{'email'})->first();
