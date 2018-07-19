@@ -1,6 +1,6 @@
 <?php
 
-namespace Versoo\PassportGoogleLogin;
+namespace LenyaPugachev\PassportGoogleLogin;
 
 use Illuminate\Http\Request;
 use Laravel\Passport\Bridge\User;
