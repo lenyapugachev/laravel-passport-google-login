@@ -1,9 +1,6 @@
 <?php
 
-namespace Versoo\PassportGoogleLogin\Traits;
-
-use Google_Client;
-use Google_Service_Oauth2;
+namespace LenyaPugachev\PassportGoogleLogin\Traits;
 
 use Illuminate\Http\Request;
 use League\OAuth2\Server\Exception\OAuthServerException;
@@ -24,28 +21,14 @@ trait GoogleLoginTrait {
 			 */
 			if ( $request->get( 'google_token' ) ) {
 
-				/**
-				 * Initialise Google SDK.
-				 *
-				 *
-				 */
-				$googleClient = new Google_Client( [
-					'application_name' => config( 'google-passport.applicationName' ),
-					// https://developers.google.com/console
-					'client_id'        => config( 'google-passport.clientId' ),
-					'client_secret'    => config( 'google-passport.clientSecret' ),
-					// Simple API access key, also from the API console. Ensure you get
-					// a Server key, and not a Browser key.
-					'developer_key'    => config( 'google-passport.developerKey' ),
-
-				] );
-				$googleClient->setAccessToken( $request->get( 'google_token' ) );
-
-				$googleAuth = new Google_Service_Oauth2( $googleClient );
-				/**
-				 * Make the Google request.
-				 */
-				$googleUser = $googleAuth->userinfo_v2_me->get( [] );
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/userinfo/v2/me");
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+				curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+				    'Authorization: Bearer ' . $request->get( 'google_token' )
+				));
+				$googleUser = json_decode(curl_exec($ch));
+				curl_close($ch);
 
 				/**
 				 * Check if the user has already signed up.
@@ -95,10 +78,6 @@ trait GoogleLoginTrait {
 					if ( ! is_null( config( 'google-passport.registration.attach_role' ) ) ) {
 						$user->attachRole( config( 'google-passport.registration.attach_role' ) );
 					}
-				}
-				if ( empty( $user->{$google_id_column} ) ) {
-					$user->{$google_id_column} = $googleUser['id'];
-					$user->update();
 				}
 
 				return $user;
