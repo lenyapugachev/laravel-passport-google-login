@@ -61,10 +61,10 @@ trait GoogleLoginTrait {
 					$user->{$google_id_column} = $googleUser->id;
 
 					if ($first_name_column) {
-						$user->{$first_name_column} = $googleUser->givenName;
+						$user->{$first_name_column} = $googleUser->given_name;
 					}
 					if ($last_name_column) {
-						$user->{$last_name_column} = $googleUser->familyName;
+						$user->{$last_name_column} = $googleUser->family_name;
 					}
 					if ($name_column) {
 						$user->{$name_column} = $googleUser->name;
