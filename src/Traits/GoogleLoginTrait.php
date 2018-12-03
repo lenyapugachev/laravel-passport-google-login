@@ -22,13 +22,23 @@ trait GoogleLoginTrait {
 			if ( $request->get( 'google_token' ) ) {
 
 				$ch = curl_init();
-				curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/userinfo/v2/me");
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-				curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-				    'Authorization: Bearer ' . $request->get( 'google_token' )
-				));
+
+				if ( $request->get( 'android' ) ) {
+					curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" . $request->get( 'google_token' ));
+				} else {
+					curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/userinfo/v2/me");
+					curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+					curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+					    'Authorization: Bearer ' . $request->get( 'google_token' )
+					));
+				}
+
 				$googleUser = json_decode(curl_exec($ch));
 				curl_close($ch);
+
+				if ( $request->get( 'android' ) ) {
+					$googleUser->id = $googleUser->sub;
+				}
 
 				/**
 				 * Check if the user has already signed up.
@@ -51,7 +61,7 @@ trait GoogleLoginTrait {
 				    $user = $userModel::where($email_column, $googleUser->email)->first();
 					
 				    if($user) {
-					$user->{$google_id_column} = $googleUser->id;
+						$user->{$google_id_column} = $googleUser->id;
 				    	$user->save();
 				    }
 				}
