@@ -22,12 +22,12 @@ trait GoogleLoginTrait {
 			if ( $request->get( 'google_token' ) ) {
 
 				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
 				if ( $request->get( 'android' ) ) {
 					curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" . $request->get( 'google_token' ));
 				} else {
 					curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/userinfo/v2/me");
-					curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 					curl_setopt($ch, CURLOPT_HTTPHEADER, array(
 					    'Authorization: Bearer ' . $request->get( 'google_token' )
 					));
